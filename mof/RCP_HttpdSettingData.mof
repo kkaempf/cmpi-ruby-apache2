@@ -1,0 +1,17 @@
+// RCP_HttpdSettingData.mof
+   [Description ( 
+       "A representation of the settings of a Httpd server "
+       "connection. The relationship between the SettingData and the "
+       "TelnetProtocolEndpoint is described by instantiating the "
+       "ElementSettingData association." )]
+class RCP_HttpdSettingData : CIM_SettingData {
+
+      [Description ( 
+          "The directory path this http server serves documents from" )]
+   string DocumentRoot;
+
+      [Description ( 
+          "The port number this http server listens on" )]
+   uint32 PortNumber;
+
+};
