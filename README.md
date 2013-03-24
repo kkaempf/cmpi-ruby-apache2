@@ -8,4 +8,4 @@ Klaus Kämpf <kkaempf@suse.de>
 
 ## License
 
-GPLv2 only
+LGPL 2.1 only
