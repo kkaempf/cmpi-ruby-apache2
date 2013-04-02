@@ -76,7 +76,7 @@ module Cmpi
     #  yields references matching reference and properties
     #
     def each( context, reference, properties = nil, want_instance = false )
-      retun unless File.exist? "/etc/apache2/default-server.conf"
+      return unless File.exist? "/etc/apache2/default-server.conf"
 
       result = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_HttpdSettingData"
       if want_instance
