@@ -5,11 +5,11 @@
 require 'rubygems'
 require 'sfcc'
 require 'test/unit'
-require_relative "./helper"
+require 'provider-testing'
 
 class Test_RCP_HttpdSettingData < Test::Unit::TestCase
   def setup
-    @client, @op = Helper.setup 'RCP_HttpdSettingData'
+    @client, @op = ProviderTesting.setup 'RCP_HttpdSettingData', 'test/test'
   end
   
   def test_registered
