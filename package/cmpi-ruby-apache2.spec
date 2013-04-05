@@ -30,6 +30,7 @@ Requires:       cmpi-bindings-ruby
 Requires:       sblim-sfcb
 PreReq:         sblim-sfcb
 BuildRequires:  sblim-sfcb
+BuildRequires:  apache2
 BuildRequires:  ruby
 BuildRequires:  rubygem(provider-testing)
 BuildRequires:  rubygem(cim) 
