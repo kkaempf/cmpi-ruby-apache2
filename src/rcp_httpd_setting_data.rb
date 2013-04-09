@@ -56,7 +56,7 @@ module Cmpi
       @trace_file.puts "cleanup terminating? #{terminating}"
       true
     end
-    
+
     def self.typemap
       {
         "DocumentRoot" => Cmpi::string,
@@ -178,7 +178,17 @@ module Cmpi
     # query : String
     # lang : String
     def exec_query( context, result, reference, query, lang )
+      keys = [ "InstanceID", "ElementName" ]
       @trace_file.puts "exec_query ref #{reference}, query #{query}, lang #{lang}"
+      expr = CMPISelectExp.new query, lang, keys
+      each(context, reference, nil, true) do |instance|
+        @trace_file.puts "match #{instance} against #{expr}"
+        if expr.match(instance)
+          instance.set_property_filter expr.filter
+          @trace_file.puts "match!"
+          result.return_instance instance
+        end
+      end
       result.done
       true
     end
