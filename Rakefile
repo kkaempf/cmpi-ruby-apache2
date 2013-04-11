@@ -1,6 +1,6 @@
 require 'rubygems'
 
-VERSION  = '0.1.0'
+VERSION  = '0.2.0'
 TOPLEVEL = File.dirname(__FILE__)
 NAME     = File.basename TOPLEVEL
 MOFDIR   = "/usr/share/mof/#{NAME}"

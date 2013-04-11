@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Apr 11 11:07:01 UTC 2013 - kkaempf@suse.com
+
+- Update to 0.2.0
+  Add RCP_HttpdProtocolEndpoint provider
+
+-------------------------------------------------------------------
 Tue Apr  2 21:01:37 UTC 2013 - kkaempf@suse.com
 
 - Initial version 0.1.0, for sblim-sfcb only
