@@ -1,6 +1,7 @@
 #
-# Provider RCP_HttpdProtocolEndpoint for class
+# Provider RCP_HttpdProtocolEndpoint for classes
 # RCP_HttpdProtocolEndpoint:CIM::Class
+# RCP_HttpdTCPProtocolEndpoint:CIM::Class
 #
 require 'syslog'
 
@@ -129,7 +130,7 @@ module Cmpi
     #  yields references matching reference and properties
     #
     def each( context, reference, properties = nil, want_instance = false )
-      result = Cmpi::CMPIObjectPath.new reference.namespace, "RCP_HttpdProtocolEndpoint"
+      result = Cmpi::CMPIObjectPath.new reference.namespace, reference.classname
       if want_instance
         result = Cmpi::CMPIInstance.new result
         result.set_property_filter(properties) if properties
@@ -137,14 +138,22 @@ module Cmpi
       
       # Set key properties
       
-      result.Name = "Apache2 Server Endpoint" # string MaxLen 256  (-> CIM_ProtocolEndpoint)
+      case reference.classname
+      when "RCP_HttpdTCPProtocolEndpoint"
+        result.Name = "Apache2 TCP Server Endpoint" # string MaxLen 256  (-> CIM_ProtocolEndpoint)
+      when "RCP_HttpdProtocolEndpoint"
+        result.Name = "Apache2 Server Endpoint" # string MaxLen 256  (-> CIM_ProtocolEndpoint)
+      default
+        raise "rcp_httpd_protocol_endpoint.rb does not serve #{reference.classname}"
+      end
+
       # get scoping system
       enum = Cmpi.broker.enumInstanceNames(context, Cmpi::CMPIObjectPath.new(reference.namespace, "RCP_ComputerSystem"))
       raise "Upcall to RCP_ComputerSystem failed for RCP_HttpdProtocolEndpoint" unless enum.has_next
       cs = enum.next_element
       result.SystemCreationClassName = cs.CreationClassName # string MaxLen 256  (-> CIM_ServiceAccessPoint)
       result.SystemName = cs.Name # string MaxLen 256  (-> CIM_ServiceAccessPoint)
-      result.CreationClassName = "RCP_HttpdProtocolEndpoint" # string MaxLen 256  (-> CIM_ServiceAccessPoint)
+      result.CreationClassName = reference.classname # string MaxLen 256  (-> CIM_ServiceAccessPoint)
       unless want_instance
         yield result
         return
@@ -172,7 +181,16 @@ module Cmpi
       
       # Instance: Set non-key properties
       
-      result.Description = "Apache2 protocol endpoint" # string  (-> CIM_ProtocolEndpoint)
+      case reference.classname
+      when "RCP_HttpdTCPProtocolEndpoint"
+        result.Description = "Apache2 TCP protocol endpoint"
+        result.PortNumber = port
+      when "RCP_HttpdProtocolEndpoint"
+        result.Description = "Apache2 protocol endpoint"
+      default
+        raise "rcp_httpd_protocol_endpoint.rb does not serve #{reference.classname}"
+      end
+
       # result.OperationalStatus = [OperationalStatus.Unknown] # uint16[]  (-> CIM_ProtocolEndpoint)
       result.EnabledState = proto ? EnabledState.Enabled : EnabledState.Disabled # uint16  (-> CIM_ProtocolEndpoint)
       # result.TimeOfLastStateChange = nil # dateTime  (-> CIM_ProtocolEndpoint)
@@ -827,4 +845,44 @@ module Cmpi
       end
     end
   end
+
+  class RCP_HttpdTCPProtocolEndpoint < MethodProvider
+    
+    include InstanceProviderIF
+    
+    def self.typemap
+      {
+        "PortNumber" => Cmpi::uint32,
+        "ProtocolIFType" => Cmpi::uint16,
+        "Description" => Cmpi::string,
+        "OperationalStatus" => Cmpi::uint16A,
+        "EnabledState" => Cmpi::uint16,
+        "TimeOfLastStateChange" => Cmpi::dateTime,
+        "Name" => Cmpi::string,
+        "NameFormat" => Cmpi::string,
+        "ProtocolType" => Cmpi::uint16,
+        "OtherTypeDescription" => Cmpi::string,
+        "SystemCreationClassName" => Cmpi::string,
+        "SystemName" => Cmpi::string,
+        "CreationClassName" => Cmpi::string,
+        "OtherEnabledState" => Cmpi::string,
+        "RequestedState" => Cmpi::uint16,
+        "EnabledDefault" => Cmpi::uint16,
+        "AvailableRequestedStates" => Cmpi::uint16A,
+        "TransitioningToState" => Cmpi::uint16,
+        "InstallDate" => Cmpi::dateTime,
+        "StatusDescriptions" => Cmpi::stringA,
+        "Status" => Cmpi::string,
+        "HealthState" => Cmpi::uint16,
+        "CommunicationStatus" => Cmpi::uint16,
+        "DetailedStatus" => Cmpi::uint16,
+        "OperatingStatus" => Cmpi::uint16,
+        "PrimaryStatus" => Cmpi::uint16,
+        "InstanceID" => Cmpi::string,
+        "Caption" => Cmpi::string,
+        "ElementName" => Cmpi::string,
+      }
+    end
+    
+  end  
 end

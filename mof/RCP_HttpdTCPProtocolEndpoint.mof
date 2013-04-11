@@ -1,0 +1,4 @@
+// RCP_HttpdTCPProtocolEndpoint.mof
+class RCP_HttpdTCPProtocolEndpoint : CIM_TCPProtocolEndpoint {
+
+};

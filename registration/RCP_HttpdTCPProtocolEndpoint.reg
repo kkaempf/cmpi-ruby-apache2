@@ -1,0 +1,5 @@
+[RCP_HttpdTCPProtocolEndpoint]
+  location: rbCmpiProvider
+  provider: RCP_HttpdProtocolEndpoint
+  type: instance method
+  namespace: root/suse
