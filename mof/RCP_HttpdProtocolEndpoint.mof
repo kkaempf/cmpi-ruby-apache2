@@ -1,0 +1,9 @@
+// RCP_HttpdProtocolEndpoint.mof
+   [Description ( 
+     "A communication point from which data can be sent or received. "
+     "ProtocolEndpoints link system or computer interfaces to "
+     "LogicalNetworks." )]
+
+class RCP_HttpdProtocolEndpoint: CIM_ProtocolEndpoint {
+
+};
