@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Apr 11 12:07:53 UTC 2013 - kkaempf@suse.com
+
+- Update to 0.3.0
+  Add RCP_HttpdHostedAccessPoint provider
+
+------------------------------------------------------------------
 Thu Apr 11 11:07:01 UTC 2013 - kkaempf@suse.com
 
 - Update to 0.2.0

@@ -1,0 +1,4 @@
+// RCP_HttpdHostedAccessPoint.mof
+class RCP_HttpdHostedAccessPoint : CIM_HostedAccessPoint {
+
+};

@@ -22,7 +22,7 @@ Url:            http://en.opensuse.org/Software_Management/CIM
 License:        LGPL-2.1
 Group:          System/Management
 AutoReqProv:    on
-Version:        0.2.0
+Version:        0.3.0
 Release:        2
 Summary:        CMPI CIM provider for Apache2
 Source0:        %{name}-%{version}.tar.bz2
