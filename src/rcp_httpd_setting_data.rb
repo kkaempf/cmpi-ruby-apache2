@@ -111,7 +111,8 @@ module Cmpi
         end
       end
 
-      # result.ElementName = nil # string  (-> CIM_SettingData)
+      # Required !
+      result.ElementName = "Apache2 configuration data" # string  (-> CIM_SettingData)
       result.ChangeableType = ChangeableType.send(:"Not Changeable - Persistent") # uint16  (-> CIM_SettingData)
       # result.ConfigurationName = nil # string  (-> CIM_SettingData)
       # result.Caption = nil # string MaxLen 64  (-> CIM_ManagedElement)
