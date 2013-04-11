@@ -1,0 +1,3 @@
+// RCP_HttpdServiceAccessBySAP.mof
+class RCP_HttpdServiceAccessBySAP : CIM_ServiceAccessBySAP {
+};

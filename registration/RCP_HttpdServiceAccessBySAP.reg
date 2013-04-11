@@ -1,0 +1,5 @@
+[RCP_HttpdServiceAccessBySAP]
+  location: rbCmpiProvider
+  provider: RCP_HttpdServiceAccessBySAP
+  namespace: root/suse
+  type: association instance
