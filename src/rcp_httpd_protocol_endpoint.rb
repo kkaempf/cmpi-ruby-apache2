@@ -2,6 +2,7 @@
 # Provider RCP_HttpdProtocolEndpoint for classes
 # RCP_HttpdProtocolEndpoint:CIM::Class
 # RCP_HttpdTCPProtocolEndpoint:CIM::Class
+# RCP_HttpdProtocolService:CIM::Class
 #
 require 'syslog'
 
@@ -143,7 +144,9 @@ module Cmpi
         result.Name = "Apache2 TCP Server Endpoint" # string MaxLen 256  (-> CIM_ProtocolEndpoint)
       when "RCP_HttpdProtocolEndpoint"
         result.Name = "Apache2 Server Endpoint" # string MaxLen 256  (-> CIM_ProtocolEndpoint)
-      default
+      when "RCP_HttpdProtocolService"
+        result.Name = "Apache2 HTTP service" # string MaxLen 256  (-> CIM_Service)
+      else
         raise "rcp_httpd_protocol_endpoint.rb does not serve #{reference.classname}"
       end
 
@@ -158,7 +161,7 @@ module Cmpi
         yield result
         return
       end
-      
+
       # Get HttpdSettingData for port
       enum = Cmpi.broker.enumInstances(context, Cmpi::CMPIObjectPath.new(reference.namespace, "RCP_HttpdSettingData"), ["PortNumber"])
       raise "Upcall to RCP_HttpdSettingData failed for RCP_HttpdProtocolEndpoint" unless enum.has_next
@@ -185,9 +188,18 @@ module Cmpi
       when "RCP_HttpdTCPProtocolEndpoint"
         result.Description = "Apache2 TCP protocol endpoint"
         result.PortNumber = port
+        result.ProtocolIFType = ProtocolIFType.send(proto.upcase.to_sym) if proto # uint16  (-> CIM_ProtocolEndpoint)
       when "RCP_HttpdProtocolEndpoint"
         result.Description = "Apache2 protocol endpoint"
-      default
+        result.ProtocolIFType = ProtocolIFType.send(proto.upcase.to_sym) if proto # uint16  (-> CIM_ProtocolEndpoint)
+      when "RCP_HttpdProtocolService"
+        result.Description = "Apache2 HTTP service"
+        result.PrimaryOwnerName = "root" # string MaxLen 64  (-> CIM_Service)
+        result.PrimaryOwnerContact = "root@#{cs.Name}" # string MaxLen 256  (-> CIM_Service)
+        # result.MaxConnections = nil # uint16  (-> CIM_ProtocolService)
+        result.Caption = "HTTP deamon" # string MaxLen 64  (-> CIM_ManagedElement)
+        result.Protocol = Protocol.Other # uint16  (-> CIM_ProtocolService)
+      else
         raise "rcp_httpd_protocol_endpoint.rb does not serve #{reference.classname}"
       end
 
@@ -197,7 +209,6 @@ module Cmpi
       # result.NameFormat = nil # string MaxLen 256  (-> CIM_ProtocolEndpoint)
       # Deprecated !
       # result.ProtocolType = ProtocolType.Unknown # uint16  (-> CIM_ProtocolEndpoint)
-      result.ProtocolIFType = ProtocolIFType.send(proto.upcase.to_sym) if proto # uint16  (-> CIM_ProtocolEndpoint)
       # result.OtherTypeDescription = nil # string MaxLen 64  (-> CIM_ProtocolEndpoint)
       # result.OtherEnabledState = nil # string  (-> CIM_EnabledLogicalElement)
       # result.RequestedState = RequestedState.Unknown # uint16  (-> CIM_EnabledLogicalElement)
@@ -294,6 +305,23 @@ module Cmpi
     # ----------------- valuemaps following, don't touch -----------------
     #
     
+    class Protocol < Cmpi::ValueMap
+      def self.map
+        {
+          "Unknown" => 0,
+          "Other" => 1,
+          "SSH" => 2,
+          "Telnet" => 3,
+          "CLP" => 4,
+          "CIM-XML" => 5,
+          "WS-Management" => 6,
+          "CIM-RS" => 7,
+          # "DMTF Reserved" => 8..32767,
+          # "Vendor Reserved" => 32768..65535,
+        }
+      end
+    end
+
     class OperationalStatus < Cmpi::ValueMap
       def self.map
         {
@@ -880,6 +908,48 @@ module Cmpi
         "PrimaryStatus" => Cmpi::uint16,
         "InstanceID" => Cmpi::string,
         "Caption" => Cmpi::string,
+        "ElementName" => Cmpi::string,
+      }
+    end
+  end
+
+  class RCP_HttpdProtocolService < MethodProvider
+    
+    include InstanceProviderIF
+    
+    def self.typemap
+      {
+        "Protocol" => Cmpi::uint16,
+        "OtherProtocol" => Cmpi::string,
+        "MaxConnections" => Cmpi::uint16,
+        "CurrentActiveConnections" => Cmpi::uint16,
+        "SystemCreationClassName" => Cmpi::string,
+        "SystemName" => Cmpi::string,
+        "CreationClassName" => Cmpi::string,
+        "Name" => Cmpi::string,
+        "PrimaryOwnerName" => Cmpi::string,
+        "PrimaryOwnerContact" => Cmpi::string,
+        "StartMode" => Cmpi::string,
+        "Started" => Cmpi::boolean,
+        "EnabledState" => Cmpi::uint16,
+        "OtherEnabledState" => Cmpi::string,
+        "RequestedState" => Cmpi::uint16,
+        "EnabledDefault" => Cmpi::uint16,
+        "TimeOfLastStateChange" => Cmpi::dateTime,
+        "AvailableRequestedStates" => Cmpi::uint16A,
+        "TransitioningToState" => Cmpi::uint16,
+        "InstallDate" => Cmpi::dateTime,
+        "OperationalStatus" => Cmpi::uint16A,
+        "StatusDescriptions" => Cmpi::stringA,
+        "Status" => Cmpi::string,
+        "HealthState" => Cmpi::uint16,
+        "CommunicationStatus" => Cmpi::uint16,
+        "DetailedStatus" => Cmpi::uint16,
+        "OperatingStatus" => Cmpi::uint16,
+        "PrimaryStatus" => Cmpi::uint16,
+        "InstanceID" => Cmpi::string,
+        "Caption" => Cmpi::string,
+        "Description" => Cmpi::string,
         "ElementName" => Cmpi::string,
       }
     end

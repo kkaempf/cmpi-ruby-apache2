@@ -1,0 +1,3 @@
+// RCP_HttpdProtocolService.mof
+class RCP_HttpdProtocolService : CIM_ProtocolService {
+};
