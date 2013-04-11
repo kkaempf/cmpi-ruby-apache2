@@ -1,5 +1,5 @@
 [RCP_HttpdSettingData]
   location: rbCmpiProvider
   provider: RCP_HttpdSettingData
-  type: instance
+  type: instance method
   namespace: root/suse
