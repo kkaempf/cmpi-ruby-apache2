@@ -1,0 +1,4 @@
+// RCP_HttpdHostedService.mof
+class RCP_HttpdHostedService : CIM_HostedService {
+
+};

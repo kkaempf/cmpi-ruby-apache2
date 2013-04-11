@@ -1,0 +1,5 @@
+[RCP_HttpdHostedService]
+  location: rbCmpiProvider
+  provider: RCP_HttpdHostedService
+  type: instance association
+  namespace: root/suse
