@@ -150,21 +150,11 @@ module Cmpi
         raise "rcp_httpd_protocol_endpoint.rb does not serve #{reference.classname}"
       end
 
-      # get scoping system
-      enum = Cmpi.broker.enumInstanceNames(context, Cmpi::CMPIObjectPath.new(reference.namespace, "RCP_ComputerSystem"))
-      raise "Upcall to RCP_ComputerSystem failed for RCP_HttpdProtocolEndpoint" unless enum.has_next
-      cs = enum.next_element
-      result.SystemCreationClassName = cs.CreationClassName # string MaxLen 256  (-> CIM_ServiceAccessPoint)
-      result.SystemName = cs.Name # string MaxLen 256  (-> CIM_ServiceAccessPoint)
-      result.CreationClassName = reference.classname # string MaxLen 256  (-> CIM_ServiceAccessPoint)
-      unless want_instance
-        yield result
-        return
-      end
-
       # Get HttpdSettingData for port
       enum = Cmpi.broker.enumInstances(context, Cmpi::CMPIObjectPath.new(reference.namespace, "RCP_HttpdSettingData"), ["PortNumber"])
-      raise "Upcall to RCP_HttpdSettingData failed for RCP_HttpdProtocolEndpoint" unless enum.has_next
+      unless enum.has_next
+        return # no apache2 found
+      end
       data = enum.next_element
       port = data.PortNumber.to_i
       proto = nil
@@ -182,6 +172,18 @@ module Cmpi
         end
       end
       
+      # get scoping system
+      enum = Cmpi.broker.enumInstanceNames(context, Cmpi::CMPIObjectPath.new(reference.namespace, "RCP_ComputerSystem"))
+      raise "Upcall to RCP_ComputerSystem failed for RCP_HttpdProtocolEndpoint" unless enum.has_next
+      cs = enum.next_element
+      result.SystemCreationClassName = cs.CreationClassName # string MaxLen 256  (-> CIM_ServiceAccessPoint)
+      result.SystemName = cs.Name # string MaxLen 256  (-> CIM_ServiceAccessPoint)
+      result.CreationClassName = reference.classname # string MaxLen 256  (-> CIM_ServiceAccessPoint)
+      unless want_instance
+        yield result
+        return
+      end
+
       # Instance: Set non-key properties
       
       case reference.classname
