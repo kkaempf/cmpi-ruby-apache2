@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Apr 19 08:09:25 UTC 2013 - kkaempf@suse.com
+
+- Update to 0.4.0
+  Require cmpi-ruby-base
+  HttpdProtocolService to check for apache2
+
+-------------------------------------------------------------------
 Thu Apr 11 12:07:53 UTC 2013 - kkaempf@suse.com
 
 - Update to 0.3.0
